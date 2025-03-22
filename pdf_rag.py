@@ -14,8 +14,8 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 
 # Set API Keys
 import os
-os.environ["GOOGLE_API_KEY"] = "AIzaSyCgK_RBblmqUgr-EpLHhJPesOjpURlRdFs"  # Replace with your Google API key
-os.environ["OPENAI_API_KEY"] = "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"  # Replace with your OpenAI API key
+os.environ["GOOGLE_API_KEY"] = ""  # Replace with your Google API key
+os.environ["OPENAI_API_KEY"] = ""  # Replace with your OpenAI API key
 
 def pdf_to_images(pdf_path):
     """Convert PDF pages to PIL images."""

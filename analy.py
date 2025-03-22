@@ -72,7 +72,7 @@ df.to_pickle("temp_df.pkl")
 llm = ChatOpenAI(
     model="gpt-3.5-turbo",
     temperature=0,
-    openai_api_key="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"  # Replace with your actual OpenAI API key
+    openai_api_key= "" # Replace with your actual OpenAI API key
 )
 
 # Define the updated prompt template
