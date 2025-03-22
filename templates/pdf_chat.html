@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quarks Extractor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome CDN (latest version as of March 2025) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        html {
+            height: 100%; /* Ensure the html element takes full height */
+        }
+
+        body {
+            font-family: "Roboto", sans-serif;
+            background: linear-gradient(to bottom, #1d0309 50%, #55201d);
+            color: white;
+            min-height: 100%; /* Changed from height to min-height */
+            display: flex;
+            flex-direction: column;
+            margin: 0; /* Remove default margin */
+        }
+
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .navbar-dark-toggler {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .navbar-dark-toggler-icon {
+            filter: invert(1);
+        }
+
+        .container {
+            flex: 1; /* This allows the container to grow and push footer down */
+        }
+
+        .container-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4rem;
+            justify-content: center;
+            align-self: self-start;
+        }
+
+        .query-box {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
+
+        .table-container {
+            max-height: 500px;
+            max-width: 50%;
+            overflow-x: auto;
+            overflow-y: auto;
+            border: 2px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            background: transparent;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .table {
+            background: transparent;
+            color: white;
+        }
+
+        .table th,
+        .table td {
+            background-color: transparent;
+            color: white;
+            border-color: white;
+            text-align: center;
+        }
+
+        .chat-container {
+            background: transparent;
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid white;
+        }
+
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            max-width: 70%;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-message {
+            background: linear-gradient(to right, #1d0309, #55201d);
+            color: white;
+            text-align: right;
+            margin-left: auto;
+        }
+
+        .ai-message {
+            background: linear-gradient(to right, #1d0309, #55201d);
+            color: white;
+            border: 2px solid white;
+            text-align: left;
+        }
+
+        .input-group input {
+            border: 2px solid white;
+            font-size: 16px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-custom {
+            background-color: rgba(85, 32, 29, 255);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+        }
+
+        .btn-custom:hover {
+            background-color: rgba(85, 32, 29, 0.8);
+        }
+
+        .search-bar-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .search-bar-container input {
+            width: 40%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .search-bar-container button {
+            background-color: white;
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-bar-container button:hover {
+            background: rgb(186, 186, 186);
+        }
+
+        .file-box {
+            background-color: white;
+            color: rgba(85, 32, 29, 255);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        footer {
+            position: relative;
+            background: radial-gradient(circle, rgba(85, 32, 29, 0.7) 0%, rgba(29, 3, 9, 1) 100%);
+            border-top: 0.5px solid rgba(29, 3, 9, 1);
+            box-shadow: 0px -4px 10px rgba(29, 3, 9, 0.6);
+            width: 100%;
+        }
+
+        /* Analytics Icon Styles (Matching img_chat.html Theme) */
+        .analytics-icon {
+            position: fixed;
+            bottom: 60px; /* Avoid overlap with footer */
+            right: 30px; /* Spacing from edge */
+            z-index: 3000; /* Ensure it’s above all elements */
+            width: 50px; /* Fixed size for consistency */
+            height: 50px; /* Fixed size for consistency */
+            color: white; /* Icon color */
+            background: linear-gradient(to right, #1d0309, #55201d); /* Gradient matching theme */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            border: 2px solid white; /* White border */
+            border-radius: 50%; /* Circular shape */
+            padding: 10px; /* Padding for better click area */
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .analytics-icon:hover {
+            background: linear-gradient(to right, #2d0a12, #652a25); /* Slightly lighter gradient on hover */
+            transform: scale(1.1); /* Slight scale-up on hover */
+            color: #e0e0e0; /* Lighter icon color on hover */
+        }
+
+        /* Style for Font Awesome icon */
+        .analytics-icon i {
+            font-size: 2rem; /* Adjusted to fit within the container */
+            display: inline-block;
+        }
+
+        /* Style for SVG icon */
+        .analytics-icon svg {
+            width: 30px; /* Adjusted to fit within the container */
+            height: 30px;
+            fill: white; /* Match the theme's white color */
+            display: none; /* Hidden by default, shown if Font Awesome fails */
+        }
+
+        /* Fallback text in case both Font Awesome and SVG fail */
+        .analytics-icon::after {
+            content: "📊"; /* Fallback emoji for analytics */
+            display: none; /* Hidden by default */
+            font-size: 2rem; /* Match icon size */
+        }
+
+        /* Show SVG if Font Awesome fails */
+        .analytics-icon.no-font-awesome i {
+            display: none;
+        }
+
+        .analytics-icon.no-font-awesome svg {
+            display: inline-block;
+        }
+
+        /* Show fallback emoji if both Font Awesome and SVG fail */
+        .analytics-icon.no-icon::after {
+            display: inline-block;
+        }
+
+        .analytics-icon.no-icon i,
+        .analytics-icon.no-icon svg {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .query-box {
+                margin-bottom: 20px;
+            }
+            .table-container {
+                max-width: 95%;
+            }
+            .analytics-icon {
+                bottom: 50px; /* Adjusted for mobile */
+                right: 20px;
+                width: 40px; /* Smaller on mobile */
+                height: 40px;
+                padding: 8px;
+            }
+            .analytics-icon i {
+                font-size: 1.5rem; /* Smaller on mobile */
+            }
+            .analytics-icon svg {
+                width: 24px; /* Smaller on mobile */
+                height: 24px;
+            }
+            .analytics-icon::after {
+                font-size: 1.5rem; /* Match mobile icon size */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Quarks Extraction</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../templates/base.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../templates/base.html#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="search-bar-container">
+        <input type="text" id="searchInput" placeholder="Search for tables in the PDF...">
+        <button class="btn-custom" onclick="searchTables()">Search</button>
+    </div>
+
+    <div class="container mt-5 d-flex justify-content-center">
+        <div class="container-flex">
+            <div class="query-box" style="border: 2px solid white">
+                <h3>Query the Uploaded File</h3>
+                <p>Ask questions about the uploaded file and get AI-generated answers.</p>
+                <div id="fileDisplay" class="alert file-box">
+                    <strong>Uploaded File:</strong> <span id="fileName"></span>
+                </div>
+                <div class="chat-container mt-3" id="chatContainer" style="display: none;"></div>
+                <div class="input-group mt-3">
+                    <input type="text" id="queryInput" class="form-control" placeholder="Type your query here...">
+                    <button class="btn btn-custom" onclick="sendQuery()" style="border: 2px solid white">Ask</button>
+                </div>
+            </div>
+
+            <div class="table-container" id="tableContainer" style="display: none;">
+                <h3>Extracted Table</h3>
+                <table class="table">
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-1" style="color: white">© 2025 Team Quarks.</p>
+        </div>
+    </footer>
+
+    <!-- Analytics Icon -->
+    <a href="analysis.html" class="analytics-icon">
+        <!-- Font Awesome Icon (Primary) -->
+        <i class="fas fa-chart-line"></i>
+        <!-- Inline SVG Icon (Fallback if Font Awesome fails) -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM7 14h2v3H7v-3zm4-4h2v7h-2v-7zm4 2h2v5h-2v-5z"/>
+        </svg>
+    </a>
+
+    <script>
+        // Check if Font Awesome loaded successfully
+        window.addEventListener('load', function () {
+            const icon = document.querySelector('.analytics-icon i');
+            const iconContainer = document.querySelector('.analytics-icon');
+            const iconStyles = window.getComputedStyle(icon, '::before');
+            const content = iconStyles.getPropertyValue('content');
+            if (!content || content === 'none') {
+                // If Font Awesome didn't load, show the SVG
+                iconContainer.classList.add('no-font-awesome');
+            }
+            // Additional check to ensure the SVG is supported (rare case)
+            if (!document.createElementNS) {
+                iconContainer.classList.add('no-icon');
+            }
+        });
+
+        function displayFileName(fileName) {
+            document.getElementById("fileName").textContent = fileName;
+            document.getElementById("fileDisplay").style.display = "block";
+        }
+
+        function sendQuery() {
+            var queryInput = document.getElementById("queryInput");
+            var chatContainer = document.getElementById("chatContainer");
+            var query = queryInput.value.trim();
+
+            if (query === "") return;
+
+            if (chatContainer.style.display === "none") {
+                chatContainer.style.display = "block";
+            }
+
+            var userMessage = document.createElement("div");
+            userMessage.className = "chat-bubble user-message";
+            userMessage.innerHTML = `<strong>You:</strong> ${query}`;
+            chatContainer.appendChild(userMessage);
+
+            var aiMessage = document.createElement("div");
+            aiMessage.className = "chat-bubble ai-message";
+            aiMessage.innerHTML = `<strong>AI:</strong> Typing...`;
+            chatContainer.appendChild(aiMessage);
+
+            queryInput.value = "";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            setTimeout(() => {
+                aiMessage.innerHTML = `<strong>AI:</strong> Here's the response for "${query}"`;
+            }, 1500);
+        }
+
+        function searchTables() {
+            var searchQuery = document.getElementById("searchInput").value.trim();
+            if (searchQuery === "") return;
+
+            var extractedTable = {
+                headers: ["ID", "Name", "Age", "Score"],
+                rows: [
+                    [1, "Alice", 25, 89],
+                    [2, "Bob", 30, 92],
+                    [3, "Charlie", 28, 85]
+                ]
+            };
+
+            var tableHead = document.getElementById("tableHead");
+            var tableBody = document.getElementById("tableBody");
+            var tableContainer = document.getElementById("tableContainer");
+
+            tableHead.innerHTML = "<tr>" + extractedTable.headers.map(header => `<th>${header}</th>`).join("") + "</tr>";
+            tableBody.innerHTML = extractedTable.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`).join("");
+
+            tableContainer.style.display = "block";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            displayFileName("example_document.pdf");
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

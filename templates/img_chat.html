@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quarks Extractor</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN (latest version as of March 2025) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+      background: linear-gradient(to bottom, #1d0309 50%, #55201d);
+      color: white;
+    }
+
+    .rounded-container {
+      background-color: transparent;
+      border-radius: 20px;
+      border: 1px solid white;
+      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25);
+      max-width: 900px;
+      width: 90%;
+      padding: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .rounded-container {
+        width: 95%;
+        padding: 30px;
+      }
+    }
+
+    html, body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      flex: 1;
+    }
+
+    .container-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4rem;
+      justify-content: center;
+      align-self: self-start;
+    }
+
+    footer {
+      position: relative;
+      bottom: 0;
+      background: radial-gradient(circle, rgba(85, 32, 29, 0.7) 0%, rgba(29, 3, 9, 1) 100%);
+      border-top: 0.5px solid rgba(29, 3, 9, 1);
+      box-shadow: 0px -4px 10px rgba(29, 3, 9, 0.6);
+    }
+
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background-color: rgba(85, 32, 29, 255);
+      border: none;
+      color: #FAF3E0;
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(85, 32, 29, 255);
+      color: white;
+    }
+
+    .navbar-dark-toggler {
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .navbar-dark-toggler-icon {
+      filter: invert(1);
+    }
+
+    .hero-section {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: center;
+      height: 700px;
+      padding-top: 180px;
+      background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%), url('../images/home.jpeg.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .hero-section::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 100%);
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    h1, h3 {
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    #features {
+      color: white;
+    }
+
+    .query-box {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+      height: 100%;
+    }
+
+    .file-box {
+      background-color: var(--medium-brown) !important;
+      color: white;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .chat-container {
+      background: transparent; /* Changed to transparent */
+      border-radius: 12px;
+      padding: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 2px solid white;
+    }
+
+    .chat-bubble {
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      max-width: 70%;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .user-message {
+      background: linear-gradient(to right, #1d0309, #55201d);
+      color: white;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .ai-message {
+      background: linear-gradient(to right, #1d0309, #55201d);
+      color: white;
+      text-align: left;
+      border: 2px solid white;
+    }
+
+    .input-group input {
+      border: 2px solid var(--medium-brown);
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    .btn-custom {
+      background-color: var(--medium-brown);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+    }
+
+    .btn-custom:hover {
+      background-color: var(--dark-brown);
+    }
+
+    /* Updated Table Container */
+    .table-container {
+      max-height: 500px; /* Increased height from 300px to 500px */
+      max-width: 50%;
+      overflow-x: auto;
+      overflow-y: auto;
+      border: 2px solid white;
+      border-radius: 10px;
+      padding: 10px;
+      background: transparent; /* Transparent background */
+    }
+
+    /* Transparent Scrollbar Styling */
+    .table-container::-webkit-scrollbar {
+      width: 8px; /* Thin scrollbar */
+      height: 8px; /* For horizontal scrollbar */
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: transparent; /* Transparent track */
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3); /* Semi-transparent thumb */
+      border-radius: 4px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5); /* Slightly more opaque on hover */
+    }
+
+    .table {
+      background: transparent;
+      color: white;
+    }
+
+    .table th,
+    .table td {
+      background-color: transparent;
+      color: white;
+      border-color: white;
+      text-align: center;
+    }
+
+    /* Analytics Icon Styles (Matching Theme) */
+    .analytics-icon {
+      position: fixed;
+      bottom: 60px; /* Avoid overlap with footer */
+      right: 30px; /* Spacing from edge */
+      z-index: 3000; /* Ensure it’s above all elements */
+      width: 50px; /* Fixed size for consistency */
+      height: 50px; /* Fixed size for consistency */
+      color: white; /* Icon color */
+      background: linear-gradient(to right, #1d0309, #55201d); /* Gradient matching chat bubbles */
+      backdrop-filter: blur(10px); /* Frosted glass effect like query-box */
+      border: 2px solid white; /* White border like other elements */
+      border-radius: 50%; /* Circular shape */
+      padding: 10px; /* Padding for better click area */
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow like query-box */
+      transition: all 0.3s ease; /* Smooth transition for hover effects */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .analytics-icon:hover {
+      background: linear-gradient(to right, #2d0a12, #652a25); /* Slightly lighter gradient on hover */
+      transform: scale(1.1); /* Slight scale-up on hover */
+      color: #e0e0e0; /* Lighter icon color on hover */
+    }
+
+    /* Style for Font Awesome icon */
+    .analytics-icon i {
+      font-size: 2rem; /* Adjusted to fit within the container */
+      display: inline-block;
+    }
+
+    /* Style for SVG icon */
+    .analytics-icon svg {
+      width: 30px; /* Adjusted to fit within the container */
+      height: 30px;
+      fill: white; /* Match the theme's white color */
+      display: none; /* Hidden by default, shown if Font Awesome fails */
+    }
+
+    /* Fallback text in case both Font Awesome and SVG fail */
+    .analytics-icon::after {
+      content: "📊"; /* Fallback emoji for analytics */
+      display: none; /* Hidden by default */
+      font-size: 2rem; /* Match icon size */
+    }
+
+    /* Show SVG if Font Awesome fails */
+    .analytics-icon.no-font-awesome i {
+      display: none;
+    }
+
+    .analytics-icon.no-font-awesome svg {
+      display: inline-block;
+    }
+
+    /* Show fallback emoji if both Font Awesome and SVG fail */
+    .analytics-icon.no-icon::after {
+      display: inline-block;
+    }
+
+    .analytics-icon.no-icon i,
+    .analytics-icon.no-icon svg {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .query-box {
+        margin-bottom: 20px;
+      }
+      .analytics-icon {
+        bottom: 50px; /* Adjusted for mobile */
+        right: 20px;
+        width: 40px; /* Smaller on mobile */
+        height: 40px;
+        padding: 8px;
+      }
+      .analytics-icon i {
+        font-size: 1.5rem; /* Smaller on mobile */
+      }
+      .analytics-icon svg {
+        width: 24px; /* Smaller on mobile */
+        height: 24px;
+      }
+      .analytics-icon::after {
+        font-size: 1.5rem; /* Match mobile icon size */
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"> Quarks Extraction</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="../templates/base.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../templates/base.html#features" id="featuresLink">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 d-flex justify-content-center gap-5">
+    <!-- Chat Section -->
+    <div class="query-box" style="border: 2px solid white">
+      <h3>Query the Uploaded File</h3>
+      <p>Ask questions about the uploaded file and get AI-generated answers.</p>
+      <div id="fileDisplay" class="alert file-box">
+        <strong>Uploaded File:</strong> <span id="fileName"></span>
+      </div>
+      <div class="chat-container mt-3" id="chatContainer" style="display: none;"></div>
+      <div class="input-group mt-3">
+        <input type="text" id="queryInput" class="form-control" placeholder="Type your query here...">
+        <button class="btn btn-custom" onclick="sendQuery()" style="border: 2px solid white">Ask</button>
+      </div>
+    </div>
+
+    <!-- Extracted Table Section -->
+    <div class="table-container" id="tableContainer">
+      <h3>Extracted Table</h3>
+      <table class="table">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="text-light text-center py-4 mt-5">
+    <div class="container">
+      <p class="mb-1" style="color: white">© 2025 Team Quarks.</p>
+    </div>
+  </footer>
+
+  <!-- Analytics Icon -->
+  <a href="analysis.html" class="analytics-icon">
+    <!-- Font Awesome Icon (Primary) -->
+    <i class="fas fa-chart-line"></i>
+    <!-- Inline SVG Icon (Fallback if Font Awesome fails) -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM7 14h2v3H7v-3zm4-4h2v7h-2v-7zm4 2h2v5h-2v-5z"/>
+    </svg>
+  </a>
+
+  <script>
+    // Check if Font Awesome loaded successfully
+    window.addEventListener('load', function () {
+      const icon = document.querySelector('.analytics-icon i');
+      const iconContainer = document.querySelector('.analytics-icon');
+      const iconStyles = window.getComputedStyle(icon, '::before');
+      const content = iconStyles.getPropertyValue('content');
+      if (!content || content === 'none') {
+        // If Font Awesome didn't load, show the SVG
+        iconContainer.classList.add('no-font-awesome');
+      }
+      // Additional check to ensure the SVG is supported (rare case)
+      if (!document.createElementNS) {
+        iconContainer.classList.add('no-icon');
+      }
+    });
+
+    function displayFileName(fileName) {
+      document.getElementById("fileName").textContent = fileName;
+      document.getElementById("fileDisplay").style.display = "block";
+    }
+
+    let extractedData = [
+      {"item": "foodgrains", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "Rs. 167.28", "per person": "Rs. 30.99", "percentage of total": "40.28"},
+      {"item": "pulses", "no. of sample households": "1,564", "consumer expenditure in three months (90 days) in Rupees per household": "24.43", "per person": "4.50", "percentage of total": "5.85"},
+      {"item": "edible oil", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "15.17", "per person": "2.83", "percentage of total": "3.68"},
+      {"item": "vegetables", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "8.48", "per person": "1.54", "percentage of total": "2.00"},
+      {"item": "milk & milk products", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "25.58", "per person": "4.76", "percentage of total": "6.19"},
+      {"item": "meat, egg and fish", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "4.12", "per person": "0.77", "percentage of total": "1.00"},
+      {"item": "fruits", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "6.30", "per person": "1.16", "percentage of total": "1.51"},
+      {"item": "refreshments", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "1.16", "per person": "0.26", "percentage of total": "0.34"},
+      {"item": "salt", "no. of sample households": "1,555", "consumer expenditure in three months (90 days) in Rupees per household": "1.67", "per person": "0.26", "percentage of total": "0.34"},
+      {"item": "spices", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "7.33", "per person": "1.28", "percentage of total": "1.66"},
+      {"item": "sugar", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "18.38", "per person": "3.34", "percentage of total": "4.34"},
+      {"item": "pan (betel leaves)", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "1.67", "per person": "0.26", "percentage of total": "0.34"},
+      {"item": "tobacco", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "7.84", "per person": "1.42", "percentage of total": "1.85"},
+      {"item": "intoxicants", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "1.67", "per person": "0.26", "percentage of total": "0.34"},
+      {"item": "fuel and light", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "28.28", "per person": "5.27", "percentage of total": "6.85"},
+      {"item": "clothing : cotton", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "18.95", "per person": "3.50", "percentage of total": "4.55"},
+      {"item": ": silk", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "0.44", "per person": "0.08", "percentage of total": "0.10"},
+      {"item": ": wool", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "1.11", "per person": "0.20", "percentage of total": "0.26"},
+      {"item": "bedding", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "2.57", "per person": "0.47", "percentage of total": "0.61"},
+      {"item": "amusements", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "2.16", "per person": "0.39", "percentage of total": "0.51"},
+      {"item": "education", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "1.47", "per person": "0.27", "percentage of total": "0.35"},
+      {"item": "medicine", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "5.07", "per person": "0.93", "percentage of total": "1.21"},
+      {"item": "toilet", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "0.90", "per person": "0.15", "percentage of total": "0.20"},
+      {"item": "petty articles", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "1.53", "per person": "0.27", "percentage of total": "0.35"},
+      {"item": "conveyance", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "4.32", "per person": "0.81", "percentage of total": "1.05"},
+      {"item": "services", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "20.55", "per person": "3.81", "percentage of total": "4.95"},
+      {"item": "furniture", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "0.78", "per person": "0.14", "percentage of total": "0.18"},
+      {"item": "sundry equipments", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "0.74", "per person": "0.14", "percentage of total": "0.18"},
+      {"item": "musical instruments", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "0.11", "per person": "0.02", "percentage of total": "0.03"},
+      {"item": "ornaments", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "5.79", "per person": "1.07", "percentage of total": "1.39"},
+      {"item": "foot-wear", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "2.32", "per person": "0.43", "percentage of total": "0.56"},
+      {"item": "utensils", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "1.03", "per person": "0.19", "percentage of total": "0.25"},
+      {"item": "ceremonials", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "22.33", "per person": "4.12", "percentage of total": "5.36"},
+      {"item": "rent", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "5.21", "per person": "0.96", "percentage of total": "1.25"},
+      {"item": "taxes", "no. of sample households": "1,566", "consumer expenditure in three months (90 days) in Rupees per household": "0.38", "per person": "0.07", "percentage of total": "0.09"}
+    ];
+
+    function updateExtractedTable(data) {
+      const tableContainer = document.getElementById("tableContainer");
+      const tableHead = document.getElementById("tableHead");
+      const tableBody = document.getElementById("tableBody");
+
+      tableHead.innerHTML = "";
+      tableBody.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        tableContainer.style.display = "none";
+        return;
+      }
+
+      const headerRow = document.createElement("tr");
+      Object.keys(data[0]).forEach((key) => {
+        const th = document.createElement("th");
+        th.textContent = key.toUpperCase();
+        headerRow.appendChild(th);
+      });
+      tableHead.appendChild(headerRow);
+
+      data.forEach((row) => {
+        const tr = document.createElement("tr");
+        Object.values(row).forEach((value) => {
+          const td = document.createElement("td");
+          td.textContent = value;
+          tr.appendChild(td);
+        });
+        tableBody.appendChild(tr);
+      });
+
+      tableContainer.style.display = "block";
+    }
+
+    function sendQuery() {
+      var queryInput = document.getElementById("queryInput");
+      var chatContainer = document.getElementById("chatContainer");
+      var query = queryInput.value.trim();
+
+      if (query === "") return;
+
+      if (chatContainer.style.display === "none") {
+        chatContainer.style.display = "block";
+      }
+
+      var userMessage = document.createElement("div");
+      userMessage.className = "chat-bubble user-message";
+      userMessage.innerHTML = `<strong>You:</strong> ${query}`;
+      chatContainer.appendChild(userMessage);
+
+      var aiMessage = document.createElement("div");
+      aiMessage.className = "chat-bubble ai-message";
+      aiMessage.innerHTML = `<strong>AI:</strong> Typing...`;
+      chatContainer.appendChild(aiMessage);
+
+      queryInput.value = "";
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      setTimeout(() => {
+        aiMessage.innerHTML = `<strong>AI:</strong> Here's the response for "${query}"`;
+      }, 1500);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      displayFileName("example_document.pdf");
+      updateExtractedTable(extractedData);
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
